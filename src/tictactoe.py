@@ -35,14 +35,25 @@ class TicTacToe:
         height = self._win.height
         y1 = int( height / 3)
         y2 = y1 * 2
+        line_width = (width / 300) *3
 
        # line = Line(Point(x1,0),Point(x1,height))
-        self._win.draw_line(Line(Point(x1,0),Point(x1,height)))
-        self._win.draw_line(Line(Point(x2,0),Point(x2,height)))
+        #self._win.draw_line(Line(Point(x1,0),Point(x1,height)),line_width)
+        # self._win.draw_line(Line(Point(x2,0),Point(x2,height)),line_width)
 
-        self._win.draw_line(Line(Point(0,y1),Point(width,y1)))
-        self._win.draw_line(Line(Point(0,y2),Point(width,y2)))
+        # self._win.draw_line(Line(Point(0,y1),Point(width,y1)),line_width)
+        # self._win.draw_line(Line(Point(0,y2),Point(width,y2)),line_width)
+        radius = line_width/2
+        self._win.draw_rounded_line(Line(Point(x1,0+(line_width*3)),Point(x1,height-(line_width*3))), line_width,radius=line_width/2)
+        self._win.draw_rounded_line(Line(Point(x2,0+(line_width*3)),Point(x2,height-(line_width*3))), line_width,radius=line_width/2)
+        self._win.draw_rounded_line(Line(Point(0+(line_width*3),y1),Point(width-(line_width*3),y1)), line_width,radius=line_width/2)
+        self._win.draw_rounded_line(Line(Point(0+(line_width*3),y2),Point(width-(line_width*3),y2)), line_width,radius=line_width/2)
 
+
+        p1 = Point(10, 10)
+        p2 = Point(400, 400)
+        line = Line(p1, p2)
+        self._win.draw_rounded_line(line,line_width=5, radius=line_width/2, fill_colour="red")
     #Create cells for game
     def _create_cells(self):
         pass

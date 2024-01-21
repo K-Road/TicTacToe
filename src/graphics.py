@@ -25,8 +25,11 @@ class Window:
     def close(self):
         self.__running = False
 
-    def draw_line(self, line, fill_colour="black"):
-        line.draw(self.__canvas,fill_colour)
+    def draw_line(self, line, line_width=1, fill_colour="black"):
+        line.draw(self.__canvas,line_width,fill_colour)
+
+    def draw_rounded_line(self, line, line_width=1, radius=1, fill_colour="black"):
+        line.draw_rounded(self.__canvas,line_width,radius,fill_colour)
 
     def set_window_canvas(self,image):
         self.__canvas.create_image(0,0,anchor="nw",image=image)
@@ -42,5 +45,12 @@ class Line:
         self.p1 = p1
         self.p2 = p2
 
-    def draw(self,canvas, fill_colour="black"):
-        canvas.create_line(self.p1.x,self.p1.y, self.p2.x,self.p2.y, fill=fill_colour, width=3)
+    def draw(self,canvas, line_width, fill_colour="black"):
+        canvas.create_line(self.p1.x,self.p1.y, self.p2.x,self.p2.y, fill=fill_colour, width=line_width)
+
+    def draw_rounded(self,canvas,line_width,radius,fill_colour="black"):
+        canvas.create_line(self.p1.x,self.p1.y, self.p2.x, self.p2.y, fill=fill_colour, width=line_width)
+
+        #draw rounded ends
+        canvas.create_oval(self.p1.x-radius,self.p1.y-radius, self.p1.x+radius, self.p1.y+radius, fill=fill_colour, outline="")
+        canvas.create_oval(self.p2.x-radius,self.p2.y-radius, self.p2.x+radius, self.p2.y+radius, fill=fill_colour, outline="")
