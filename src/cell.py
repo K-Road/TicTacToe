@@ -3,10 +3,25 @@
 #Cell knows its position, xo value, and draws itself
 class Cell:
     def __init__(self, window):
-        pass
+        self._x1 = None
+        self._y1 = None
+        self._x2 = None
+        self._y2 = None
+        self._win = window
+        self._xo = None
 
-    def draw(self, x, y):
-        pass
+    def draw(self, x1, y1, x2, y2):
+        if self._win is None:
+            return
+        self._x1 = x1
+        self._y1 = y1
+        self._x2 = x2
+        self._y2 = y2
+
+        self._win.draw_rectangle(self._x1, self._y1, self._x2, self._y2, "white")
+        
 
     def set_xo_value(self, value):
-        pass
+        if self._xo is not None:
+            self._xo = value
+
