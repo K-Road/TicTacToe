@@ -41,6 +41,7 @@ class TicTacToe:
         line_width = (width / 300) *3
         radius = line_width/2
 
+        print(f"{x1} {y1} , {x2} {y2}")
         #draw board
         self._win.draw_rounded_line(Line(Point(x1,0+(line_width*3)),Point(x1,height-(line_width*3))), line_width,radius)
         self._win.draw_rounded_line(Line(Point(x2,0+(line_width*3)),Point(x2,height-(line_width*3))), line_width,radius)
@@ -68,14 +69,15 @@ class TicTacToe:
         if self._win is None:
             return
 
-        cx1 = i * (self._cell_size_x + ((self._win.width / 300)*3))# line_width)
+        cx1 = i * (self._cell_size_x + ((self._win.width / 300)*3)) + (((self._win.width / 300)*3)/2)# line_width)
         cx1 += self._x1
-        cy1 = j * (self._cell_size_y + ((self._win.height / 300)*3))# line_width)
+        cy1 = j * (self._cell_size_y + ((self._win.height / 300)*3)) + (((self._win.width / 300)*3)/2)# line_width)
         cy1 += self._y1
 
         cx2 = cx1 + self._cell_size_x
         cy2 = cy1 + self._cell_size_y
 
+        print(f"{cx1} {cy1} , {cx2} {cy2}")
         self._cells[i][j].draw(cx1,cy1,cx2,cy2)
         self._animate()
 
