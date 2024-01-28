@@ -8,8 +8,8 @@ class TicTacToe:
     def __init__(self,x1,y1,cell_size_x,cell_size_y,window=None):
         self._x1 = x1
         self._y1 = y1
-        self._cell_size_x = cell_size_x
-        self._cell_size_y = cell_size_y
+        self._cell_size_x = int(cell_size_x)
+        self._cell_size_y = int(cell_size_y)
         self._win = window
         #self._cell_spacer = (self._win.width / 300) *3
 
@@ -18,9 +18,9 @@ class TicTacToe:
         self._cells = []
 
         #image load
-        # self.image_o = self._load_image("./images/o.png")
-        # self.image_x = self._load_image("./images/x.jpg")
-        # self.image_x2 = self._load_image("./images/x2.jpg")
+        self.image_o = self._load_image("./images/o.png",self._cell_size_x,self._cell_size_y)
+        self.image_x = self._load_image("./images/x.jpg",self._cell_size_x,self._cell_size_y)
+        self.image_x2 = self._load_image("./images/x2.jpg",self._cell_size_x,self._cell_size_y)
 
         
         #create game board
@@ -28,6 +28,11 @@ class TicTacToe:
         #create cells here
         #2D array 3 x 3 cells
         self._create_cells()
+
+    def turn(self, player):
+        self._cells[0][0].move("x",self.image_x)
+        self._animate()
+        print(self._cells[0][0]._xo)
 
     def _create_board(self):
         #dynamically set from window dimensions
@@ -93,6 +98,6 @@ class TicTacToe:
 
 
     def _load_image(self,filename,x=50,y=50):
-        image = Image.open(filename)
+        image = Image.open(filename).convert("RGBA")
         image = image.resize((x,y), resample=Image.LANCZOS)
         return ImageTk.PhotoImage(image)

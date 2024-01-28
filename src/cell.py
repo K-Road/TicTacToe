@@ -18,10 +18,15 @@ class Cell:
         self._x2 = x2
         self._y2 = y2
 
-        self._win.draw_rectangle(self._x1, self._y1, self._x2, self._y2, "white")
+        if self._xo is None:
+            self._win.draw_rectangle(self._x1, self._y1, self._x2, self._y2, "white")
+
+    def move(self,move,image):
+        self.set_xo_value(move)
+        self._win.draw_image(self._x1,self._y1,image)
         
 
     def set_xo_value(self, value):
-        if self._xo is not None:
-            self._xo = value
+       # if self._xo is not None:
+        self._xo = value
 

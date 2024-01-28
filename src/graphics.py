@@ -37,6 +37,9 @@ class Window:
     def draw_rectangle(self, x1,y1, x2,y2, bg):
         self.__canvas.create_rectangle(x1,y1,x2,y2, fill=bg, outline="")
 
+    def draw_image(self, x,y,image):
+        self.__canvas.create_image(x,y,anchor='nw',image=image)
+
 
 class Point:
     def __init__(self, x, y):
