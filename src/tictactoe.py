@@ -12,7 +12,7 @@ class TicTacToe:
         self._cell_size_y = int(cell_size_y)
         self._win = window
         #self._cell_spacer = (self._win.width / 300) *3
-
+        self._playing = False
         self._num_rows = 3
         self._num_cols = 3
         self._cells = []
@@ -29,10 +29,37 @@ class TicTacToe:
         #2D array 3 x 3 cells
         self._create_cells()
 
-    def turn(self, player):
-        self._cells[0][0].move("x",self.image_x)
+        # self.clicked_coordinates = tk.StringVar()
+        # self._win.__canvas.bind("<Button-1>", self.on_click)
+
+    # def on_click(self, event):
+    #     self.clicked_coordinates.set((event.x, event.y))
+
+    def _turn(self, player):
+        self._cells[0][0].move("o",self.image_o)
         self._animate()
         print(self._cells[0][0]._xo)
+
+    def play(self):
+        self._playing = True
+        #self._win.wait_variable()
+        #while self._playing:
+        self._win.wait_input()#self._win.clicked_coordinates)
+
+        # clicked_coordinates = eval(self.clicked_coordinates.get())
+        #print(clicked_coordinates)
+        # self._playing = True
+        # while self._playing:
+        #     self._turn(player,cell)
+            # if self._check_win_condition() == "Draw":
+            #     self._playing = False
+            # if self._win.exists():
+            #     self._playing = False
+            #     print("HERE")
+        
+    def _check_win_condition(self):
+        return "Draw"
+        
 
     def _create_board(self):
         #dynamically set from window dimensions
@@ -82,7 +109,7 @@ class TicTacToe:
         cx2 = cx1 + self._cell_size_x
         cy2 = cy1 + self._cell_size_y
 
-        print(f"{cx1} {cy1} , {cx2} {cy2}")
+        print(f"{cx1} {cy1} , {cx2} {cy2}") #DEBUG REMOVE
         self._cells[i][j].draw(cx1,cy1,cx2,cy2)
         self._animate()
 

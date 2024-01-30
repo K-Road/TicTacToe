@@ -1,16 +1,33 @@
-from tkinter import Tk, BOTH, Canvas
+import tkinter as tk #, BOTH, Canvas
 
 class Window:
     def __init__(self, width, height):
         self.width = width
         self.height = height
-        self.__root = Tk()
+        self.__root = tk.Tk()
         self.__root.title("BASE")
-        self.__root.protocol("WM_DELETE_WINDOW",self.close)
-        self.__canvas = Canvas(self.__root, bg="grey", width=width,height=height)
-        self.__canvas.pack(fill=BOTH,expand=1)
+        self.__root.protocol("WM_DELETE_WINDOW",self.on_window_close)
+        self.__canvas = tk.Canvas(self.__root, bg="grey", width=width,height=height)
+        self.__canvas.pack(expand=1)
         self.__running = False
 
+        self.clicked_coordinates = tk.StringVar()
+        self.__canvas.bind("<Button-1>", self.on_click)
+
+    def wait_input(self):
+        self.__root.wait_variable(self.clicked_coordinates)
+        clicked_coordinates = eval(self.clicked_coordinates.get())
+        print(f"User clicked at do stuff here{clicked_coordinates}")
+
+    
+    def on_click(self, event):
+        self.clicked_coordinates.set((event.x, event.y))
+    def exists(self):
+        return self.__root.winfo_exists()
+
+    def on_window_close(self):
+        self.__running = False
+        #self.__root.destroy()
 
     def redraw(self):
         self.__root.update_idletasks()

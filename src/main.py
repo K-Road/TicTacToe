@@ -14,7 +14,8 @@ def main():
 
 
     t = TicTacToe(0,0,cell_size_x,cell_size_y,win)
-    t.turn("player1")
+    t.play()
+    #t.turn("player1")
     win.wait_for_close()
 
 if __name__ == "__main__":
