@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-from graphics import Line, Point
+from graphics import Line, Point, Window
 from cell import Cell
 import time
 
@@ -16,6 +16,7 @@ class TicTacToe:
         self._num_rows = 3
         self._num_cols = 3
         self._cells = []
+        self.turn = 0
 
         #image load
         self.image_o = self._load_image("./images/o.png",self._cell_size_x,self._cell_size_y)
@@ -35,27 +36,46 @@ class TicTacToe:
     # def on_click(self, event):
     #     self.clicked_coordinates.set((event.x, event.y))
 
-    def _turn(self, player):
-        self._cells[0][0].move("o",self.image_o)
+    def _turn(self, cell, player):
+        #self._cells[0][0].move("o",self.image_o)
+        if player == 1:
+            cell.move("o",self.image_o)
+        else:
+            cell.move("x",self.image_x)
         self._animate()
-        print(self._cells[0][0]._xo)
+        self.turn += 1
+        self._check_win_condition()
+        #print(self._cells[0][0]._xo)
 
     def play(self):
-        self._playing = True
+        #self._playing = True
         #self._win.wait_variable()
-        #while self._playing:
-        self._win.wait_input()#self._win.clicked_coordinates)
+        while self.turn < 9:
+            print(self.turn)
+            self.check_for_mouse_input()
+        print("No valid turns")
 
-        # clicked_coordinates = eval(self.clicked_coordinates.get())
-        #print(clicked_coordinates)
-        # self._playing = True
-        # while self._playing:
-        #     self._turn(player,cell)
-            # if self._check_win_condition() == "Draw":
-            #     self._playing = False
-            # if self._win.exists():
-            #     self._playing = False
-            #     print("HERE")
+    def check_for_mouse_input(self):
+        input = self._win.wait_input()
+        #cell = None
+        cell = self.get_cell(input)
+        if cell is not None:
+            if self.turn%2 == 0:
+                player = 1
+            else:
+                player = 2
+            self._turn(cell, player)
+        else:
+            self.check_for_mouse_input()
+
+    def get_cell(self, input):
+        x = input[0]//self._cell_size_x
+        y = input[1]//self._cell_size_y
+        print(f"{x} {y}")
+        if self._cells[x][y].get_xo_value() is None:
+            return self._cells[x][y]
+        return None
+
         
     def _check_win_condition(self):
         return "Draw"

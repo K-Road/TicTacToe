@@ -29,4 +29,6 @@ class Cell:
     def set_xo_value(self, value):
        # if self._xo is not None:
         self._xo = value
-
+    def get_xo_value(self):
+        if self._xo is not None:
+            return self._xo

@@ -18,6 +18,7 @@ class Window:
         self.__root.wait_variable(self.clicked_coordinates)
         clicked_coordinates = eval(self.clicked_coordinates.get())
         print(f"User clicked at do stuff here{clicked_coordinates}")
+        return clicked_coordinates
 
     
     def on_click(self, event):
@@ -27,7 +28,7 @@ class Window:
 
     def on_window_close(self):
         self.__running = False
-        #self.__root.destroy()
+        self.__root.destroy()
 
     def redraw(self):
         self.__root.update_idletasks()
