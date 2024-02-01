@@ -44,41 +44,76 @@ class TicTacToe:
             cell.move("x",self.image_x)
         self._animate()
         self.turn += 1
-        self._check_win_condition()
+        #self._check_win_condition(player,cell)
         #print(self._cells[0][0]._xo)
 
     def play(self):
         #self._playing = True
         #self._win.wait_variable()
-        while self.turn < 9:
+        while self.turn < 9:#and not self._check_win_condition():
             print(self.turn)
-            self.check_for_mouse_input()
-        print("No valid turns")
-
-    def check_for_mouse_input(self):
-        input = self._win.wait_input()
-        #cell = None
-        cell = self.get_cell(input)
-        if cell is not None:
+            cell = None
+            while cell is None:
+                input = self._win.wait_input()#check_for_mouse_input()
+                cell,x,y = self.get_cell(input)
             if self.turn%2 == 0:
                 player = 1
             else:
                 player = 2
+            print(player)
             self._turn(cell, player)
-        else:
-            self.check_for_mouse_input()
+            if not self._check_win_condition(player,x,y):
+                break
+
+        print("No valid turns")
+
+    def check_for_mouse_input(self):
+        #input = self._win.wait_input()
+        #cell = None
+        # cell = self.get_cell(input)
+        # if cell is not None:
+        #     if self.turn%2 == 0:
+        #         player = 1
+        #     else:
+        #         player = 2
+        #     self._turn(cell, player)
+        # else:
+        #     self.check_for_mouse_input()
+        pass
 
     def get_cell(self, input):
         x = input[0]//self._cell_size_x
         y = input[1]//self._cell_size_y
         print(f"{x} {y}")
         if self._cells[x][y].get_xo_value() is None:
-            return self._cells[x][y]
-        return None
+            return self._cells[x][y],x,y
+        return None, None, None
 
         
-    def _check_win_condition(self):
-        return "Draw"
+    def _check_win_condition(self,turn,x,y):
+        #check x
+        if turn == 1:
+            check = "o"
+        else:
+            check = "x"
+
+
+        if self._cells[x][0].get_xo_value() == check and self._cells[x][1].get_xo_value() == check and self._cells[x][2].get_xo_value() == check:
+            #p1 = 
+            #self._win.draw_win(self._cells[x][0],self._cells[x][2])
+            print("WIN")
+            return False
+        if self._cells[0][y].get_xo_value() == check and self._cells[1][y].get_xo_value() == check and self._cells[2][y].get_xo_value() == check:
+            print("WIN")
+            return False
+        if self._cells[1][1].get_xo_value is not None:
+            if self._cells[0][0].get_xo_value() == check and self._cells[1][1].get_xo_value() == check and self._cells[2][2].get_xo_value() == check:
+                print("WIN")
+                return False
+            if self._cells[0][2].get_xo_value() == check and self._cells[1][1].get_xo_value() == check and self._cells[2][0].get_xo_value() == check:
+                print("WIN")
+                return False
+        return True
         
 
     def _create_board(self):
