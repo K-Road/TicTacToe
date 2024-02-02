@@ -20,7 +20,18 @@ class Window:
         print(f"User clicked at do stuff here{clicked_coordinates}")
         return clicked_coordinates
 
+    def draw_play_again(self):
+        play_again_button = tk.Button(self.__canvas, text="Play Again", command=self._play_again)
+        play_again_button.pack()
+        
     
+    def _play_again(self):
+        result = tk.messagebox.askyesno("Play again", "Do you want to play again?")
+        if result:
+            return True
+        else:
+            self.on_window_close()
+
     def on_click(self, event):
         self.clicked_coordinates.set((event.x, event.y))
     def exists(self):

@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from graphics import Line, Point, Window
 from cell import Cell
 import time
+from tkinter import messagebox
 
 class TicTacToe:
     def __init__(self,x1,y1,cell_size_x,cell_size_y,window=None):
@@ -23,21 +24,15 @@ class TicTacToe:
         self.image_x = self._load_image("./images/x.jpg",self._cell_size_x,self._cell_size_y)
         self.image_x2 = self._load_image("./images/x2.jpg",self._cell_size_x,self._cell_size_y)
 
-        
         #create game board
         self._create_board()
         #create cells here
         #2D array 3 x 3 cells
         self._create_cells()
 
-        # self.clicked_coordinates = tk.StringVar()
-        # self._win.__canvas.bind("<Button-1>", self.on_click)
 
-    # def on_click(self, event):
-    #     self.clicked_coordinates.set((event.x, event.y))
 
     def _turn(self, cell, player):
-        #self._cells[0][0].move("o",self.image_o)
         if player == 1:
             cell.move("o",self.image_o)
         else:
@@ -50,8 +45,9 @@ class TicTacToe:
     def play(self):
         #self._playing = True
         #self._win.wait_variable()
+        self.turn = 0
         while self.turn < 9:#and not self._check_win_condition():
-            print(self.turn)
+           # print(self.turn)
             cell = None
             while cell is None:
                 input = self._win.wait_input()#check_for_mouse_input()
@@ -60,27 +56,26 @@ class TicTacToe:
                 player = 1
             else:
                 player = 2
-            print(player)
+            #print(player)
             self._turn(cell, player)
             if not self._check_win_condition(player,x,y):
                 break
 
-        print("No valid turns")
-
-    def check_for_mouse_input(self):
-        #input = self._win.wait_input()
-        #cell = None
-        # cell = self.get_cell(input)
-        # if cell is not None:
-        #     if self.turn%2 == 0:
-        #         player = 1
-        #     else:
-        #         player = 2
-        #     self._turn(cell, player)
-        # else:
-        #     self.check_for_mouse_input()
-        pass
-
+        if self._play_again():
+            print("Restart")
+            self._reset_cells()
+            #self.play()
+        print("HERE")
+        
+    
+    def _play_again(self):
+        #self._win.draw_play_again()
+        result = tk.messagebox.askyesno("Play again", "Do you want to play again?")
+        if result:
+            return True
+        print("NO")
+        return False
+    
     def get_cell(self, input):
         x = input[0]//self._cell_size_x
         y = input[1]//self._cell_size_y
@@ -99,7 +94,6 @@ class TicTacToe:
 
 
         if self._cells[x][0].get_xo_value() == check and self._cells[x][1].get_xo_value() == check and self._cells[x][2].get_xo_value() == check:
-            #p1 = 
             #self._win.draw_win(self._cells[x][0],self._cells[x][2])
             print("WIN")
             return False
@@ -171,7 +165,10 @@ class TicTacToe:
 
     #reset to start over
     def _reset_cells(self):
-        pass
+        self._cells = []
+        self._create_cells()
+        self._animate()
+        self.play()
 
     def _animate(self):
         if self._win is None:
