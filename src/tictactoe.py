@@ -3,6 +3,7 @@ from PIL import Image, ImageTk
 from graphics import Line, Point, Window
 from cell import Cell
 import time
+import random
 from tkinter import messagebox
 
 class TicTacToe:
@@ -21,8 +22,9 @@ class TicTacToe:
 
         #image load
         self.image_o = self._load_image("./images/o.png",self._cell_size_x,self._cell_size_y)
-        self.image_x = self._load_image("./images/x.jpg",self._cell_size_x,self._cell_size_y)
-        self.image_x2 = self._load_image("./images/x2.jpg",self._cell_size_x,self._cell_size_y)
+        self.image_x = []
+        self.image_x.append(self._load_image("./images/x.jpg",self._cell_size_x,self._cell_size_y))
+        self.image_x.append(self._load_image("./images/x2.jpg",self._cell_size_x,self._cell_size_y))
 
         #create game board
         self._create_board()
@@ -36,79 +38,87 @@ class TicTacToe:
         if player == 1:
             cell.move("o",self.image_o)
         else:
-            cell.move("x",self.image_x)
+            cell.move("x",random.choice(self.image_x))
         self._animate()
-        self.turn += 1
-        #self._check_win_condition(player,cell)
-        #print(self._cells[0][0]._xo)
 
     def play(self):
-        #self._playing = True
-        #self._win.wait_variable()
+
         self.turn = 0
-        while self.turn < 9:#and not self._check_win_condition():
-           # print(self.turn)
+        while self.turn < 9:
             cell = None
             while cell is None:
-                input = self._win.wait_input()#check_for_mouse_input()
+                input = self._win.wait_input()
                 cell,x,y = self.get_cell(input)
-            if self.turn%2 == 0:
-                player = 1
-            else:
-                player = 2
-            #print(player)
-            self._turn(cell, player)
-            if not self._check_win_condition(player,x,y):
-                break
+            
+            player = 1 if self.turn % 2 == 0 else 2
+            self._turn(cell,player)
 
-        if self._play_again():
-            print("Restart")
+            if self._check_win_condition(player,x,y):
+                result = player
+                break
+            self.turn += 1
+
+        if self.turn == 9:
+            result = 0
+
+        if self._play_again(result):
             self._reset_cells()
-            #self.play()
-        print("HERE")
         
-    
-    def _play_again(self):
-        #self._win.draw_play_again()
-        result = tk.messagebox.askyesno("Play again", "Do you want to play again?")
+    def _play_again(self,status):
+        if status == 0:
+            result = tk.messagebox.askyesno("Game tied", "Do you want to play again?")
+        else:
+            result = tk.messagebox.askyesno(f"Player {status} wins!", "Do you want to play again?")
         if result:
             return True
-        print("NO")
         return False
     
     def get_cell(self, input):
         x = input[0]//self._cell_size_x
         y = input[1]//self._cell_size_y
-        print(f"{x} {y}")
+       # print(f"{x} {y}")
         if self._cells[x][y].get_xo_value() is None:
             return self._cells[x][y],x,y
         return None, None, None
 
         
-    def _check_win_condition(self,turn,x,y):
-        #check x
-        if turn == 1:
-            check = "o"
-        else:
-            check = "x"
+    def _check_win_condition(self,player,x,y):
+        check = "o" if player ==1 else "x"
 
-
-        if self._cells[x][0].get_xo_value() == check and self._cells[x][1].get_xo_value() == check and self._cells[x][2].get_xo_value() == check:
-            #self._win.draw_win(self._cells[x][0],self._cells[x][2])
-            print("WIN")
-            return False
-        if self._cells[0][y].get_xo_value() == check and self._cells[1][y].get_xo_value() == check and self._cells[2][y].get_xo_value() == check:
-            print("WIN")
-            return False
-        if self._cells[1][1].get_xo_value is not None:
-            if self._cells[0][0].get_xo_value() == check and self._cells[1][1].get_xo_value() == check and self._cells[2][2].get_xo_value() == check:
-                print("WIN")
-                return False
-            if self._cells[0][2].get_xo_value() == check and self._cells[1][1].get_xo_value() == check and self._cells[2][0].get_xo_value() == check:
-                print("WIN")
-                return False
-        return True
-        
+        #chk row
+        if ( 
+            self._cells[x][0].get_xo_value() == check 
+            and self._cells[x][1].get_xo_value() == check 
+            and self._cells[x][2].get_xo_value() == check
+        ):
+            self._cells[x][0].draw_win(self._cells[x][2])
+            return True
+        #chk col
+        if (
+            self._cells[0][y].get_xo_value() == check 
+            and self._cells[1][y].get_xo_value() == check 
+            and self._cells[2][y].get_xo_value() == check
+        ):
+            self._cells[0][y].draw_win(self._cells[2][y])
+            return True
+        #chk diag
+        if self._cells[1][1].get_xo_value() is not None:
+            if (
+                self._cells[0][0].get_xo_value() == check 
+                and self._cells[1][1].get_xo_value() == check 
+                and self._cells[2][2].get_xo_value() == check
+            ):
+                self._cells[0][0].draw_win(self._cells[2][2])
+                return True
+            if (
+                self._cells[0][2].get_xo_value() == check 
+                and self._cells[1][1].get_xo_value() == check 
+                and self._cells[2][0].get_xo_value() == check
+            ):
+                self._cells[0][2].draw_win(self._cells[2][0])
+                return True
+        return False
+  
 
     def _create_board(self):
         #dynamically set from window dimensions
@@ -122,18 +132,12 @@ class TicTacToe:
         line_width = (width / 300) *3
         radius = line_width/2
 
-        print(f"{x1} {y1} , {x2} {y2}")
+        #print(f"{x1} {y1} , {x2} {y2}")
         #draw board
         self._win.draw_rounded_line(Line(Point(x1,0+(line_width*3)),Point(x1,height-(line_width*3))), line_width,radius)
         self._win.draw_rounded_line(Line(Point(x2,0+(line_width*3)),Point(x2,height-(line_width*3))), line_width,radius)
         self._win.draw_rounded_line(Line(Point(0+(line_width*3),y1),Point(width-(line_width*3),y1)), line_width,radius)
         self._win.draw_rounded_line(Line(Point(0+(line_width*3),y2),Point(width-(line_width*3),y2)), line_width,radius)
-
-        #test - remove
-        # p1 = Point(10, 10)
-        # p2 = Point(400, 400)
-        # line = Line(p1, p2)
-        # self._win.draw_rounded_line(line,line_width=5, radius=line_width/2, fill_colour="red")
 
     #Create cells for game
     def _create_cells(self):
@@ -158,14 +162,13 @@ class TicTacToe:
         cx2 = cx1 + self._cell_size_x
         cy2 = cy1 + self._cell_size_y
 
-        print(f"{cx1} {cy1} , {cx2} {cy2}") #DEBUG REMOVE
         self._cells[i][j].draw(cx1,cy1,cx2,cy2)
         self._animate()
-
 
     #reset to start over
     def _reset_cells(self):
         self._cells = []
+        self._create_board()
         self._create_cells()
         self._animate()
         self.play()
@@ -174,7 +177,6 @@ class TicTacToe:
         if self._win is None:
             return
         self._win.redraw()
-
 
     def _load_image(self,filename,x=50,y=50):
         image = Image.open(filename).convert("RGBA")

@@ -24,11 +24,15 @@ class Cell:
     def move(self,move,image):
         self.set_xo_value(move)
         self._win.draw_image(self._x1,self._y1,image)
-        
+
+    def draw_win(self,end):
+        #print(f"{self._x1} {self._y1} {end._x1} {end._y1}")
+        self._win.draw_win_line( (self._x1 + self._x2)/2, (self._y1 + self._y2) /2, (end._x1+end._x2)/2, (end._y1+end._y2)/2,fill_colour ="red")
 
     def set_xo_value(self, value):
        # if self._xo is not None:
         self._xo = value
+    
     def get_xo_value(self):
         if self._xo is not None:
             return self._xo

@@ -17,7 +17,7 @@ class Window:
     def wait_input(self):
         self.__root.wait_variable(self.clicked_coordinates)
         clicked_coordinates = eval(self.clicked_coordinates.get())
-        print(f"User clicked at do stuff here{clicked_coordinates}")
+        #print(f"User clicked at do stuff here{clicked_coordinates}")
         return clicked_coordinates
 
     def draw_play_again(self):
@@ -25,12 +25,12 @@ class Window:
         play_again_button.pack()
         
     
-    def _play_again(self):
-        result = tk.messagebox.askyesno("Play again", "Do you want to play again?")
-        if result:
-            return True
-        else:
-            self.on_window_close()
+    # def _play_again(self):
+    #     result = tk.messagebox.askyesno("Play again", "Do you want to play again?")
+    #     if result:
+    #         return True
+    #     else:
+    #         self.on_window_close()
 
     def on_click(self, event):
         self.clicked_coordinates.set((event.x, event.y))
@@ -60,6 +60,10 @@ class Window:
         line.draw(self.__canvas,line_width,fill_colour)
 
     def draw_rounded_line(self, line, line_width=1, radius=1, fill_colour="black"):
+        line.draw_rounded(self.__canvas,line_width,radius,fill_colour)
+
+    def draw_win_line(self, x1,y1, x2,y2, line_width=6, radius=3, fill_colour="black"):
+        line = Line(Point(x1,y1),Point(x2,y2))
         line.draw_rounded(self.__canvas,line_width,radius,fill_colour)
 
     def set_window_canvas(self,image):
